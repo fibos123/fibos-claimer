@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  fibos-claimer:
+    # build: .
+    image: mingfunwong/fibos-claimer
+    restart: always
+    environment:
+      FIBOS_CLAIMER: ${FIBOS_CLAIMER}
+      FIBOS_TRANSFER: ${FIBOS_TRANSFER}
+      HTTP_ENDPOINT: ${HTTP_ENDPOINT}

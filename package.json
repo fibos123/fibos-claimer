@@ -1,0 +1,18 @@
+{
+  "name": "fibos-claimer",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "do": "bun src/index.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "croner": "^8.0.0",
+    "fibos.js": "^0.3.11"
+  }
+}
