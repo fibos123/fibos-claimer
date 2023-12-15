@@ -1,6 +1,12 @@
 # fibos-claimer
 
-To install dependencies:
+use Docker Compose
+```
+cp .env.sample .env
+docker-compose up -d
+```
+
+Or to install dependencies:
 
 ```bash
 curl -fsSL https://bun.sh/install | bash
@@ -13,4 +19,3 @@ To run:
 ```bash
 bun do
 ```
-bun 
