@@ -1,12 +1,12 @@
 # fibos-claimer
 
-use Docker Compose
+Use Docker Compose
 ```
 cp .env.sample .env
 docker-compose up -d
 ```
 
-Or to install dependencies:
+Or to install:
 
 ```bash
 curl -fsSL https://bun.sh/install | bash
