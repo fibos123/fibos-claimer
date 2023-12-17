@@ -1,6 +1,5 @@
 import Cron from "croner";
-import { Api, JsonRpc } from "@mingfunwong/fibosjs";
-import { JsSignatureProvider } from "@mingfunwong/fibosjs";
+import { Api, JsonRpc, JsSignatureProvider } from "@mingfunwong/fibosjs";
 
 const httpEndpoint = process.env.HTTP_ENDPOINT as string;
 
