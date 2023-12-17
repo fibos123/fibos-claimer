@@ -1,5 +1,6 @@
 import Cron from "croner";
-import FIBOS from "fibos.js";
+import { Api, JsonRpc } from "@mingfunwong/fibosjs";
+import { JsSignatureProvider } from "@mingfunwong/fibosjs";
 
 const httpEndpoint = process.env.HTTP_ENDPOINT as string;
 
@@ -46,22 +47,41 @@ fibosClaimer();
 fibosTransfer();
 
 async function _claimrewards(producerName: string, privateKey: string) {
-  const fibos = FIBOS({
-    chainId: "6aa7bd33b6b45192465afa3553dedb531acaaff8928cf64b70bd4c5e49b7ec6a",
-    keyProvider: privateKey,
-    httpEndpoint: httpEndpoint,
-  });
-  const result = await fibos.claimrewards(producerName);
+  const signatureProvider = new JsSignatureProvider([privateKey]);
+  const rpc = new JsonRpc(httpEndpoint, { fetch });
+  const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+
+  const transaction = {
+    actions: [
+      {
+        account: "eosio",
+        name: "claimrewards",
+        authorization: [
+          {
+            actor: producerName,
+            permission: "active",
+          },
+        ],
+        data: {
+          owner: producerName,
+        },
+      },
+    ],
+  };
+  const transactConfig = {
+    blocksBehind: 3,
+    expireSeconds: 30,
+  };
+
+  const result = await api.transact(transaction, transactConfig);
+
   return result;
 }
 
 async function _getBalance(accountName: string) {
-  const fibos = FIBOS({
-    chainId: "6aa7bd33b6b45192465afa3553dedb531acaaff8928cf64b70bd4c5e49b7ec6a",
-    httpEndpoint: httpEndpoint,
-  });
+  const rpc = new JsonRpc(httpEndpoint, { fetch });
 
-  const accounts = await fibos.getTableRows({
+  const accounts = await rpc.get_table_rows({
     json: true,
     code: "eosio.token",
     scope: accountName,
@@ -86,21 +106,36 @@ async function _getBalance(accountName: string) {
 }
 
 async function _transfer(transferName: string, privateKey: string, to: string, memo: string, quantity: number) {
-  const fibos = FIBOS({
-    chainId: "6aa7bd33b6b45192465afa3553dedb531acaaff8928cf64b70bd4c5e49b7ec6a",
-    keyProvider: privateKey,
-    httpEndpoint: httpEndpoint,
-  });
-  const data = {
-    from: transferName,
-    to: to,
-    quantity: `${quantity.toFixed(4)} FO`,
-    memo: memo,
+  const signatureProvider = new JsSignatureProvider([privateKey]);
+  const rpc = new JsonRpc(httpEndpoint, { fetch });
+  const api = new Api({ rpc, signatureProvider, textDecoder: new TextDecoder(), textEncoder: new TextEncoder() });
+
+  const transaction = {
+    actions: [
+      {
+        account: "eosio.token",
+        name: "transfer",
+        authorization: [
+          {
+            actor: transferName,
+            permission: "active",
+          },
+        ],
+        data: {
+          from: transferName,
+          to: to,
+          quantity: `${quantity.toFixed(4)} FO`,
+          memo: memo,
+        },
+      },
+    ],
+  };
+  const transactConfig = {
+    blocksBehind: 3,
+    expireSeconds: 30,
   };
 
-  const eosioTokenContract = await fibos.contract("eosio.token");
-  const result = await eosioTokenContract.transfer(data, {
-    authorization: transferName,
-  });
+  const result = await api.transact(transaction, transactConfig);
+
   return result;
 }

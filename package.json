@@ -12,7 +12,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "croner": "^8.0.0",
-    "fibos.js": "^0.3.11"
+    "@mingfunwong/fibosjs": "^1.0.0",
+    "croner": "^8.0.0"
   }
 }
