@@ -2,7 +2,6 @@ version: "3.7"
 
 services:
   fibos-claimer:
-    # build: .
     image: mingfunwong/fibos-claimer
     restart: always
     environment:

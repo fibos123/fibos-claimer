@@ -17,5 +17,5 @@ cp .env.sample .env
 To run:
 
 ```bash
-bun do
+bun start
 ```
